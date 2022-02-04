@@ -1,0 +1,191 @@
+import _ from 'lodash';
+import { Icon } from '@iconify/react';
+import React, { useEffect, useState } from 'react';
+import filterFill from '@iconify/icons-ant-design/filter-outline';
+import relaodOutline from '@iconify/icons-ant-design/reload-outline';
+import { useParams } from 'react-router-dom';
+// material
+import {
+  Card,
+  Table,
+  Stack,
+  Button,
+  TableRow,
+  TableBody,
+  TableCell,
+  Container,
+  Typography,
+  TableContainer,
+  TablePagination
+} from '@mui/material';
+// components
+import useAxios from 'axios-hooks';
+import { ExportStatus } from '../common';
+import Page from '../components/Page';
+import Scrollbar from '../components/Scrollbar';
+import SearchNotFound from '../components/SearchNotFound';
+import { ExportButton, TxListFilter, TxListHead, TxRow } from '../components/txs';
+//
+import { apiOptions, getCsvFileUrl } from '../utils/apiSettings';
+import { getTaxAppViewData } from '../data/txs';
+// ----------------------------------------------------------------------
+
+export default function TxPage() {
+  const { address, taxappview } = useParams();
+  const tableHeader = getTaxAppViewData(taxappview);
+  const [page, setPage] = useState(0);
+  const [q, setQ] = useState();
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('_id');
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [showFilterToolbar, setShowFilterToolbar] = useState(false);
+  const [exportStatus, setExportStatus] = useState(ExportStatus.Idle);
+  const [csvFileUrl, setCsvFileUrl] = useState('');
+  const [{ data, loading, error }, refetch] = useAxios(
+    apiOptions({
+      url: `/txs/${address}`,
+      params: {
+        taxappview,
+        skip: page,
+        take: rowsPerPage,
+        q,
+        order,
+        orderBy
+      }
+    })
+  );
+
+  const [{ data: exportData, loading: exportLoading, error: exportError }, exportFunc] = useAxios(
+    apiOptions({
+      url: `/txs/${address}`,
+      params: {
+        taxappview,
+        csv: true
+      }
+    }),
+    { manual: true }
+  );
+
+  useEffect(() => {
+    if (exportData) {
+      setExportStatus(ExportStatus.Done);
+      setCsvFileUrl(getCsvFileUrl(address, exportData.csvFileName));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [exportData]);
+
+  const handleRequestSort = (property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+
+  const handleChangePage = (_event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const toggleFilterToolbar = () => {
+    setShowFilterToolbar(!showFilterToolbar);
+  };
+
+  const handleApplyFilter = (query) => {
+    setQ(query);
+  };
+
+  const handleExportButton = () => {
+    setExportStatus(ExportStatus.Processing);
+    const doExportFunc = _.debounce(() => {
+      exportFunc();
+    }, 2000);
+
+    doExportFunc();
+  };
+
+  if (loading) return null;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
+
+  const { txs, totalCount } = data;
+  const notTxFound = !txs;
+
+  return (
+    <Page title="Transactions | TrackTerra">
+      <Container maxWidth="xl">
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+          <Typography variant="h4" gutterBottom>
+            Transactions
+          </Typography>
+          <Stack direction="row" spacing={3}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={toggleFilterToolbar}
+              startIcon={<Icon icon={filterFill} />}
+            >
+              Filter
+            </Button>
+            <ExportButton
+              onExport={handleExportButton}
+              exportStatus={exportStatus}
+              csvFileUrl={csvFileUrl}
+            />
+          </Stack>
+        </Stack>
+        <TxListFilter
+          showFilter={showFilterToolbar}
+          numSelected={0}
+          onApplyFilter={handleApplyFilter}
+        />
+        <Card>
+          <Scrollbar>
+            <TableContainer sx={{ minWidth: 800 }}>
+              <Table>
+                <TxListHead
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={tableHeader}
+                  onRequestSort={handleRequestSort}
+                />
+                <TableBody>
+                  {txs?.map((row) => {
+                    const { tx, extras } = row;
+                    const txData = { ...tx, ...extras };
+                    return <TxRow tableHeader={tableHeader} txData={txData} key={tx.id} />;
+                  })}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 100 * emptyRows }}>
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
+                {notTxFound && (
+                  <TableBody>
+                    <TableRow>
+                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                        <SearchNotFound />
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                )}
+              </Table>
+            </TableContainer>
+          </Scrollbar>
+
+          <TablePagination
+            rowsPerPageOptions={[10, 50, 100]}
+            component="div"
+            count={totalCount}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Card>
+      </Container>
+    </Page>
+  );
+}
