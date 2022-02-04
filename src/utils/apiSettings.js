@@ -1,6 +1,6 @@
-const SITE_URL = 'http://localhost:4000';
+const SITE_URL = process.env.REACT_APP_API_URL;
 const API_BASE_URL = `${SITE_URL}/api/v1`;
-
+console.log(`the url is ${SITE_URL}`);
 export const apiOptions = (options) => {
   const apiOptions = {
     baseURL: API_BASE_URL
