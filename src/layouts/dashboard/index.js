@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 //
 import { AccAddress } from '@terra-money/terra.js';
 import useAxios from 'axios-hooks';
+import Loading from '../../components/Loading';
 import NotParsed from '../../pages/NotParsed';
 import DashboardNavbar from './DashboardNavbar';
 import DashboardSidebar from './DashboardSidebar';
@@ -55,7 +56,6 @@ export default function DashboardLayout() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address]);
 
-  if (loading) return null;
   if (error) return `Fetch data error ${error.message}`;
 
   let sAddress;
@@ -67,6 +67,13 @@ export default function DashboardLayout() {
 
     sAddress = extras.sAddress;
   }
+  if (loading)
+    return (
+      <RootStyle>
+        <Loading msg="Loading, please wait ...." />
+      </RootStyle>
+    );
+
   return (
     <RootStyle>
       <DashboardNavbar address={address} onOpenSidebar={() => setOpen(true)} />

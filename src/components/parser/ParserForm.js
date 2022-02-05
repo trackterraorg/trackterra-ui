@@ -9,6 +9,7 @@ import { styled } from '@mui/material/styles';
 import _ from 'lodash';
 import useAxios from 'axios-hooks';
 import { apiOptions } from '../../utils/apiSettings';
+import Loading from '../Loading';
 // ----------------------------------------------------------------------
 const FormStyle = styled('div')(({ theme }) => ({
   maxWidth: 480,
@@ -17,17 +18,6 @@ const FormStyle = styled('div')(({ theme }) => ({
   flexDirection: 'column',
   justifyContent: 'center',
   padding: theme.spacing(12, 0)
-}));
-
-const SectionStyle = styled('div')(({ theme }) => ({
-  alignContent: 'center',
-  alignItems: 'center',
-  width: '100%',
-  maxWidth: 464,
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  margin: theme.spacing(2, 0, 2, 2)
 }));
 
 // ----------------------------------------------------------------------
@@ -99,17 +89,9 @@ export default function ParserForm() {
     navigate(`/account/${address}/dashboard`, { replace: true });
   };
 
-  if (loading) return null;
   if (error) return `Submission error! ${error.message}`;
 
-  const loadingForm = (
-    <SectionStyle>
-      <img alt="parsing" src="/static/loading.gif" style={{ maxWidth: 200 }} />
-      <Typography variant="h4" sx={{ px: 5, mt: 0, mb: 5 }}>
-        Parsing txs, please wait ....
-      </Typography>
-    </SectionStyle>
-  );
+  const loadingForm = <Loading msg="Parsing txs, please wait ...." />;
   const parsingForm = (
     <FormStyle>
       <Box sx={{ mb: 5 }}>
