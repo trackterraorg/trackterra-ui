@@ -7,6 +7,7 @@ const RootStyle = styled('div')(({ theme }) => ({
   alignContent: 'center',
   alignItems: 'center',
   width: '100%',
+  height: '100%',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',

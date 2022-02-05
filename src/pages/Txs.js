@@ -2,7 +2,6 @@ import _ from 'lodash';
 import { Icon } from '@iconify/react';
 import React, { useEffect, useState } from 'react';
 import filterFill from '@iconify/icons-ant-design/filter-outline';
-import relaodOutline from '@iconify/icons-ant-design/reload-outline';
 import { useParams } from 'react-router-dom';
 // material
 import {
@@ -28,6 +27,7 @@ import { ExportButton, TxListFilter, TxListHead, TxRow } from '../components/txs
 //
 import { apiOptions, getCsvFileUrl } from '../utils/apiSettings';
 import { getTaxAppViewData } from '../data/txs';
+import Loading from '../components/Loading';
 // ----------------------------------------------------------------------
 
 export default function TxPage() {
@@ -106,7 +106,8 @@ export default function TxPage() {
     doExportFunc();
   };
 
-  if (loading) return null;
+  if (loading) return <Loading msg="Loading transactions, please wait ...." />;
+
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
   const { txs, totalCount } = data;

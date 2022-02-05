@@ -13,6 +13,7 @@ import {
   ActiveContracts
 } from '../components/_dashboard/app';
 import { apiOptions } from '../utils/apiSettings';
+import Loading from '../components/Loading';
 
 // ----------------------------------------------------------------------
 
@@ -24,7 +25,7 @@ export default function DashboardApp() {
     })
   );
 
-  if (loading) return null;
+  if (loading) return <Loading msg="Loading, please wait ...." />;
   if (error) return `Fetch data error ${error.message}`;
   const walletDetail = data;
 

@@ -67,12 +67,6 @@ export default function DashboardLayout() {
 
     sAddress = extras.sAddress;
   }
-  if (loading)
-    return (
-      <RootStyle>
-        <Loading msg="Loading, please wait ...." />
-      </RootStyle>
-    );
 
   return (
     <RootStyle>
