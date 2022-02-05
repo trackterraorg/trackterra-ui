@@ -15,7 +15,9 @@ import {
   Container,
   Typography,
   TableContainer,
-  TablePagination
+  TablePagination,
+  Box,
+  CircularProgress
 } from '@mui/material';
 // components
 import useAxios from 'axios-hooks';
@@ -106,11 +108,12 @@ export default function TxPage() {
     doExportFunc();
   };
 
-  if (loading) return <Loading msg="Loading transactions, please wait ...." />;
+  // if (loading) return <Loading msg="Loading transactions, please wait ...." />;
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
-  const { txs, totalCount } = data;
+  const txs = data?.txs;
+  const totalCount = data?.totalCount;
   const notTxFound = !txs;
 
   return (
@@ -144,47 +147,66 @@ export default function TxPage() {
         <Card>
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
-              <Table>
-                <TxListHead
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={tableHeader}
-                  onRequestSort={handleRequestSort}
-                />
-                <TableBody>
-                  {txs?.map((row) => {
-                    const { tx, extras } = row;
-                    const txData = { ...tx, ...extras };
-                    return <TxRow tableHeader={tableHeader} txData={txData} key={tx.id} />;
-                  })}
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 100 * emptyRows }}>
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
-                </TableBody>
-                {notTxFound && (
+              {txs && !loading && (
+                <Table>
+                  <TxListHead
+                    order={order}
+                    orderBy={orderBy}
+                    headLabel={tableHeader}
+                    onRequestSort={handleRequestSort}
+                  />
+                  <TableBody>
+                    {txs.map((row) => {
+                      const { tx, extras } = row;
+                      const txData = { ...tx, ...extras };
+                      return <TxRow tableHeader={tableHeader} txData={txData} key={tx.id} />;
+                    })}
+                    {emptyRows > 0 && (
+                      <TableRow style={{ height: 100 * emptyRows }}>
+                        <TableCell colSpan={tableHeader.length} />
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              )}
+              {loading && (
+                <Table>
                   <TableBody>
                     <TableRow>
-                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                      <TableCell align="center" colSpan={tableHeader.length} sx={{ py: 3 }}>
+                        <Box sx={{ display: 'flex', padding: 5, justifyContent: 'center' }}>
+                          <CircularProgress />
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              )}
+              {notTxFound && !loading && (
+                <Table>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell align="center" colSpan={tableHeader.length} sx={{ py: 3 }}>
                         <SearchNotFound />
                       </TableCell>
                     </TableRow>
                   </TableBody>
-                )}
-              </Table>
+                </Table>
+              )}
             </TableContainer>
           </Scrollbar>
 
-          <TablePagination
-            rowsPerPageOptions={[10, 50, 100]}
-            component="div"
-            count={totalCount}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
+          {totalCount > 0 && (
+            <TablePagination
+              rowsPerPageOptions={[10, 50, 100]}
+              component="div"
+              count={totalCount}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          )}
         </Card>
       </Container>
     </Page>
