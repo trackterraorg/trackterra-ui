@@ -15,18 +15,8 @@ const sidebarConfig = (address) => [
   },
   {
     title: 'Transactions',
-    path: `/account/${address}/txs/regular`,
+    path: `/account/${address}/txs`,
     icon: getIcon(creditCardOutline)
-  },
-  {
-    title: 'Koinly',
-    path: `/account/${address}/txs/koinly`
-    // icon: getIcon(creditCardOutline)
-  },
-  {
-    title: 'Cointracker',
-    path: `/account/${address}/txs/cointracker`
-    // icon: getIcon(creditCardOutline)
   },
   {
     title: 'Supported protocols',

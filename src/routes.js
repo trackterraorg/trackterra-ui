@@ -19,7 +19,7 @@ export default function Router() {
       children: [
         { element: <Navigate to="dashboard" replace /> },
         { path: 'dashboard', element: <DashboardApp /> },
-        { path: 'txs/:taxappview', element: <TxPage /> },
+        { path: 'txs', element: <TxPage /> },
         { path: 'protocols', element: <ProtocolsPage /> }
       ]
     },

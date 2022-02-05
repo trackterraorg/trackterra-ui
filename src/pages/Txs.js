@@ -28,13 +28,11 @@ import SearchNotFound from '../components/SearchNotFound';
 import { ExportButton, TxListFilter, TxListHead, TxRow } from '../components/txs';
 //
 import { apiOptions, getCsvFileUrl } from '../utils/apiSettings';
-import { getTaxAppViewData } from '../data/txs';
-import Loading from '../components/Loading';
+import { TABLE_FIELDS } from '../data/txs';
 // ----------------------------------------------------------------------
 
 export default function TxPage() {
-  const { address, taxappview } = useParams();
-  const tableHeader = getTaxAppViewData(taxappview);
+  const { address } = useParams();
   const [page, setPage] = useState(0);
   const [q, setQ] = useState();
   const [order, setOrder] = useState('asc');
@@ -42,12 +40,12 @@ export default function TxPage() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [showFilterToolbar, setShowFilterToolbar] = useState(false);
   const [exportStatus, setExportStatus] = useState(ExportStatus.Idle);
+  const [taxApp, setTaxApp] = useState();
   const [csvFileUrl, setCsvFileUrl] = useState('');
   const [{ data, loading, error }, refetch] = useAxios(
     apiOptions({
       url: `/txs/${address}`,
       params: {
-        taxappview,
         skip: page,
         take: rowsPerPage,
         q,
@@ -61,12 +59,27 @@ export default function TxPage() {
     apiOptions({
       url: `/txs/${address}`,
       params: {
-        taxappview,
-        csv: true
+        q,
+        order,
+        orderBy,
+        csv: true,
+        taxapp: taxApp
       }
     }),
     { manual: true }
   );
+
+  useEffect(() => {
+    if (taxApp) {
+      setExportStatus(ExportStatus.Processing);
+      const doExportFunc = _.debounce(() => {
+        exportFunc();
+      }, 2000);
+
+      doExportFunc();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [taxApp]);
 
   useEffect(() => {
     if (exportData) {
@@ -99,13 +112,8 @@ export default function TxPage() {
     setQ(query);
   };
 
-  const handleExportButton = () => {
-    setExportStatus(ExportStatus.Processing);
-    const doExportFunc = _.debounce(() => {
-      exportFunc();
-    }, 2000);
-
-    doExportFunc();
+  const handleExportButton = (taxAppToExport) => {
+    setTaxApp(taxAppToExport);
   };
 
   // if (loading) return <Loading msg="Loading transactions, please wait ...." />;
@@ -152,18 +160,18 @@ export default function TxPage() {
                   <TxListHead
                     order={order}
                     orderBy={orderBy}
-                    headLabel={tableHeader}
+                    headLabel={TABLE_FIELDS}
                     onRequestSort={handleRequestSort}
                   />
                   <TableBody>
                     {txs.map((row) => {
                       const { tx, extras } = row;
                       const txData = { ...tx, ...extras };
-                      return <TxRow tableHeader={tableHeader} txData={txData} key={tx.id} />;
+                      return <TxRow tableHeader={TABLE_FIELDS} txData={txData} key={tx.id} />;
                     })}
                     {emptyRows > 0 && (
                       <TableRow style={{ height: 100 * emptyRows }}>
-                        <TableCell colSpan={tableHeader.length} />
+                        <TableCell colSpan={TABLE_FIELDS.length} />
                       </TableRow>
                     )}
                   </TableBody>
@@ -173,7 +181,7 @@ export default function TxPage() {
                 <Table>
                   <TableBody>
                     <TableRow>
-                      <TableCell align="center" colSpan={tableHeader.length} sx={{ py: 3 }}>
+                      <TableCell align="center" colSpan={TABLE_FIELDS.length} sx={{ py: 3 }}>
                         <Box sx={{ display: 'flex', padding: 5, justifyContent: 'center' }}>
                           <CircularProgress />
                         </Box>
@@ -186,7 +194,7 @@ export default function TxPage() {
                 <Table>
                   <TableBody>
                     <TableRow>
-                      <TableCell align="center" colSpan={tableHeader.length} sx={{ py: 3 }}>
+                      <TableCell align="center" colSpan={TABLE_FIELDS.length} sx={{ py: 3 }}>
                         <SearchNotFound />
                       </TableCell>
                     </TableRow>
