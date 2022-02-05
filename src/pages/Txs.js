@@ -89,7 +89,7 @@ export default function TxPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exportData]);
 
-  const handleRequestSort = (property) => {
+  const handleRequestSort = (_event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
