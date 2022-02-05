@@ -20,7 +20,7 @@ import styled from '@emotion/styled';
 
 const DetailViewStyle = styled(Box)({
   'td, th': { border: 0 },
-  'td:first-child': { fontWeight: 'bolder' }
+  'td:first-of-type': { fontWeight: 'bolder' }
 });
 
 TxRow.propTypes = {
