@@ -107,7 +107,12 @@ export default function DashboardSidebar({ address, sAddress, isOpenSidebar, onC
             </Typography>
           </Box>
 
-          <Button fullWidth href="mailto:info@trackterra.org" target="_blank" variant="contained">
+          <Button
+            fullWidth
+            href="mailto:trackterraorg@gmail.com"
+            target="_blank"
+            variant="contained"
+          >
             Email us
           </Button>
         </Stack>
