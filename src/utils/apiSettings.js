@@ -1,4 +1,4 @@
-const SITE_URL = process.env.REACT_APP_API_URL ?? 'api.trackterra.org';
+const SITE_URL = process.env.REACT_APP_API_URL ?? 'https://api.trackterra.org';
 const API_BASE_URL = `${SITE_URL}/api/v1`;
 console.log(`the url is ${SITE_URL}`);
 export const apiOptions = (options) => {
