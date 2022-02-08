@@ -116,6 +116,10 @@ export default function TxPage() {
     setTaxApp(taxAppToExport);
   };
 
+  const handleAfterExportButton = () => {
+    setExportStatus(ExportStatus.Idle);
+  };
+
   // if (loading) return <Loading msg="Loading transactions, please wait ...." />;
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
@@ -142,6 +146,7 @@ export default function TxPage() {
             </Button>
             <ExportButton
               onExport={handleExportButton}
+              onAfterExport={handleAfterExportButton}
               exportStatus={exportStatus}
               csvFileUrl={csvFileUrl}
             />

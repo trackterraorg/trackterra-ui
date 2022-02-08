@@ -1,24 +1,33 @@
-import { Button, FormControl, InputLabel, Link, MenuItem, Select, TextField } from '@mui/material';
+import { Button, FormControl, IconButton, InputLabel, Link, MenuItem, Select } from '@mui/material';
 import { Icon } from '@iconify/react';
 import downloadFill from '@iconify/icons-eva/download-fill';
 import PropTypes from 'prop-types';
 import React from 'react';
+import RepeatIcon from '@mui/icons-material/Repeat';
 import { ExportStatus } from '../../common';
 import { TAX_APPS } from '../../data/taxapps';
 
 ExportButton.propTypes = {
   exportStatus: PropTypes.number,
   onExport: PropTypes.func,
+  onAfterExport: PropTypes.func,
   csvFileUrl: PropTypes.string
 };
 
-export default function ExportButton({ exportStatus, onExport, csvFileUrl }) {
+export default function ExportButton({ exportStatus, onExport, onAfterExport, csvFileUrl }) {
   const [exportApp, setExportApp] = React.useState('');
 
-  const onChange = (event) => {
-    const taxApp = event.target.value;
-    setExportApp(taxApp);
-    onExport(taxApp);
+  const onSelectApp = (event) => {
+    const taxApp = event?.target?.value;
+    if (taxApp) {
+      setExportApp(taxApp);
+      onExport(taxApp);
+    }
+  };
+
+  const onRetryExport = (_event) => {
+    setExportApp('');
+    onAfterExport();
   };
 
   return (
@@ -26,7 +35,7 @@ export default function ExportButton({ exportStatus, onExport, csvFileUrl }) {
       {exportStatus === ExportStatus.Idle && (
         <FormControl size="small" sx={{ m: 1, minWidth: 120 }}>
           <InputLabel>Export</InputLabel>
-          <Select value={exportApp} label="Export" onChange={onChange}>
+          <Select value={exportApp} label="Export" onChange={onSelectApp}>
             <MenuItem key="regular" value="regular">
               Regular
             </MenuItem>
@@ -47,11 +56,16 @@ export default function ExportButton({ exportStatus, onExport, csvFileUrl }) {
       )}
 
       {exportStatus === ExportStatus.Done && (
-        <Link href={csvFileUrl} underline="none">
-          <Button variant="contained" startIcon={<Icon icon={downloadFill} />}>
-            Download
-          </Button>
-        </Link>
+        <>
+          <Link href={csvFileUrl} underline="none">
+            <Button variant="contained" startIcon={<Icon icon={downloadFill} />}>
+              Download
+            </Button>
+          </Link>
+          <IconButton aria-label="try again" onClick={onRetryExport}>
+            <RepeatIcon />
+          </IconButton>
+        </>
       )}
     </>
   );

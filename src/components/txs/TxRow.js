@@ -39,10 +39,7 @@ export default function TxRow(props) {
   const { txData } = other;
   const [open, setOpen] = useState(false);
 
-  const isTxhashCell = (id) => {
-    console.log(id);
-    return id === 'sTxHash';
-  };
+  const isTxhashCell = (id) => id === 'sTxHash';
 
   const sTxHashCell = (rowData) => (
     <Link
