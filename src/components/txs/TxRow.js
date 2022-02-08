@@ -102,6 +102,18 @@ export default function TxRow(props) {
                         <TableCell>{txData.contract}</TableCell>
                       </TableRow>
                     )}
+                    {txData?.memo && (
+                      <TableRow>
+                        <TableCell>Memo</TableCell>
+                        <TableCell>{txData.memo}</TableCell>
+                      </TableRow>
+                    )}
+                    {txData?.friendlyDescription && (
+                      <TableRow>
+                        <TableCell>Friendly description</TableCell>
+                        <TableCell>{txData.friendlyDescription}</TableCell>
+                      </TableRow>
+                    )}
                   </TableBody>
                 </Table>
               </DetailViewStyle>
