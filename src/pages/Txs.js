@@ -35,8 +35,8 @@ export default function TxPage() {
   const { address } = useParams();
   const [page, setPage] = useState(0);
   const [q, setQ] = useState();
-  const [order, setOrder] = useState('asc');
-  const [orderBy, setOrderBy] = useState('_id');
+  const [order, setOrder] = useState();
+  const [orderBy, setOrderBy] = useState();
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [showFilterToolbar, setShowFilterToolbar] = useState(false);
   const [exportStatus, setExportStatus] = useState(ExportStatus.Idle);

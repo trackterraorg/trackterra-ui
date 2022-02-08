@@ -8,7 +8,8 @@ import {
   Collapse,
   Typography,
   Table,
-  TableBody
+  TableBody,
+  Link
 } from '@mui/material';
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -37,10 +38,26 @@ export default function TxRow(props) {
   const { tableHeader, ...other } = props;
   const { txData } = other;
   const [open, setOpen] = useState(false);
+
+  const isTxhashCell = (id) => {
+    console.log(id);
+    return id === 'sTxHash';
+  };
+
+  const sTxHashCell = (rowData) => (
+    <Link
+      href={`https://finder.terra.money/columbus-5/tx/${rowData.txhash}`}
+      target="_blank"
+      rel="noreferrer"
+    >
+      {rowData.sTxHash}
+    </Link>
+  );
+
   const renderTableCells = (rowData) =>
     tableHeader.map((tableHeader, id) => (
       <TableCell align="left" key={rowData.id + id}>
-        {rowData[tableHeader.id]}
+        {isTxhashCell(tableHeader.id) ? sTxHashCell(rowData) : <>{rowData[tableHeader.id]}</>}
       </TableCell>
     ));
 
