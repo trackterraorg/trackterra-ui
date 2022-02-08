@@ -23,6 +23,16 @@ const filters = [
         type: 'number'
       },
       {
+        label: 'Sent token',
+        value: 'sentToken',
+        type: 'text'
+      },
+      {
+        label: 'Received token',
+        value: 'receivedToken',
+        type: 'text'
+      },
+      {
         label: 'Label',
         value: 'label',
         type: 'multiselect',
