@@ -10,6 +10,7 @@ import _ from 'lodash';
 import useAxios from 'axios-hooks';
 import { apiOptions } from '../../utils/apiSettings';
 import Loading from '../Loading';
+import ParsingStatus from '../../common/parsing-status.enum';
 // ----------------------------------------------------------------------
 const FormStyle = styled('div')(({ theme }) => ({
   maxWidth: 480,
@@ -39,12 +40,12 @@ export default function ParserForm() {
     }),
     { manual: true }
   );
-  const [parsingStatus, setParsingStatus] = useState('Idle');
+  const [parsingStatus, setParsingStatus] = useState(ParsingStatus.Idle);
   const [parsingMsg, setParsingMsg] = useState('');
 
   useEffect(() => {
     if (data) {
-      setParsingStatus('Done');
+      setParsingStatus(ParsingStatus.Done);
       setParsingMsg(data.msg);
     }
   }, [data]);
@@ -68,11 +69,11 @@ export default function ParserForm() {
     if (formik.isValid) {
       const { address } = formik.values;
       if (address) {
-        setParsingStatus(() => 'Parsing');
+        setParsingStatus(() => ParsingStatus.Parsing);
 
         const parseRequest = _.debounce(() => {
           parseWallet({ url: `/wallets/parse/${address}` });
-        }, 1000);
+        }, 250);
 
         parseRequest();
       }
@@ -80,7 +81,7 @@ export default function ParserForm() {
   };
 
   const parseNewAccount = () => {
-    setParsingStatus('Idle');
+    setParsingStatus(ParsingStatus.Idle);
     formik.resetForm();
   };
 
@@ -89,9 +90,11 @@ export default function ParserForm() {
     navigate(`/account/${address}/dashboard`, { replace: true });
   };
 
+  const loadingForm = <Loading msg="Parsing txs, please wait ...." />;
+
+  if (loading || parsingStatus === ParsingStatus.Parsing) return loadingForm;
   if (error) return `Submission error! ${error.message}`;
 
-  const loadingForm = <Loading msg="Parsing txs, please wait ...." />;
   const parsingForm = (
     <FormStyle>
       <Box sx={{ mb: 5 }}>
@@ -158,8 +161,7 @@ export default function ParserForm() {
   );
 
   return (
-    (parsingStatus === 'Idle' && parsingForm) ||
-    (parsingStatus === 'Parsing' && loadingForm) ||
-    (parsingStatus === 'Done' && successForm)
+    (parsingStatus === ParsingStatus.Idle && parsingForm) ||
+    (parsingStatus === ParsingStatus.Done && successForm)
   );
 }
