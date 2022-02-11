@@ -118,6 +118,7 @@ export default function TxPage() {
 
   const handleAfterExportButton = () => {
     setExportStatus(ExportStatus.Idle);
+    setTaxApp('');
   };
 
   // if (loading) return <Loading msg="Loading transactions, please wait ...." />;
