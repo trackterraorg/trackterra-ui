@@ -46,7 +46,7 @@ export default function TxPage() {
     apiOptions({
       url: `/txs/${address}`,
       params: {
-        skip: page,
+        skip: page * rowsPerPage,
         take: rowsPerPage,
         q,
         order,
