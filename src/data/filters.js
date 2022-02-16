@@ -38,6 +38,10 @@ const filters = [
         type: 'multiselect',
         options: [
           {
+            label: 'Deposit',
+            value: 'Deposit'
+          },
+          {
             label: 'Withdraw',
             value: 'Withdraw'
           },
@@ -46,8 +50,8 @@ const filters = [
             value: 'Swap'
           },
           {
-            label: 'Deposit',
-            value: 'Desposit'
+            label: 'Fail',
+            value: 'Fail'
           }
         ]
       },
