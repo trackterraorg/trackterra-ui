@@ -70,12 +70,7 @@ export default function ParserForm() {
       const { address } = formik.values;
       if (address) {
         setParsingStatus(() => ParsingStatus.Parsing);
-
-        const parseRequest = _.debounce(() => {
-          parseWallet({ url: `/wallets/parse/${address}` });
-        }, 250);
-
-        parseRequest();
+        parseWallet({ url: `/wallets/parse/${address}` });
       }
     }
   };
