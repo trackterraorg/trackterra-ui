@@ -7,7 +7,7 @@ const filterOperators = [
   {
     label: 'Not equal to',
     value: '_NE',
-    types: ['date', 'integer', 'number', 'radio', 'select', 'switch', 'text']
+    types: ['date', 'integer', 'number', 'radio', 'select', 'text']
   },
   {
     label: 'Contains',

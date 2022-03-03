@@ -19,6 +19,20 @@ const TxListFilter = ({ showFilter, onApplyFilter }) => {
       return;
     }
     const formattedQuery = QueryBuilder.formatQuery(query);
+
+    formattedQuery.rules = formattedQuery.rules.map((rule) => {
+      if (rule.field === 'protocol') {
+        const onlyUnclassified = rule.value;
+        rule.value = 'Unclassified';
+        if (onlyUnclassified) {
+          rule.operator = '_EQ';
+        } else {
+          rule.operator = '_NE';
+        }
+      }
+      return rule;
+    });
+
     onApplyFilter(JSON.stringify(formattedQuery));
   };
 

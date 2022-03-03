@@ -56,6 +56,11 @@ const filters = [
         ]
       },
       {
+        label: 'Only Unclassified',
+        value: 'protocol',
+        type: 'switch'
+      },
+      {
         label: 'Tag',
         value: 'tag',
         type: 'text'
