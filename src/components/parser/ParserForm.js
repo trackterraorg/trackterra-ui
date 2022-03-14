@@ -45,7 +45,7 @@ export default function ParserForm() {
 
   useEffect(() => {
     if (data) {
-      setParsingStatus(ParsingStatus.Done);
+      setParsingStatus(parseInt(data.status, 10));
       setParsingMsg(data.msg);
     }
   }, [data]);
@@ -155,8 +155,31 @@ export default function ParserForm() {
     </FormStyle>
   );
 
+  const failForm = (
+    <FormStyle>
+      <Box sx={{ mb: 5 }}>
+        <Typography variant="h4" gutterBottom>
+          Parsing Failed
+        </Typography>
+        <Typography sx={{ color: 'red' }}>{parsingMsg}</Typography>
+      </Box>
+      <Button
+        color="info"
+        fullWidth
+        size="large"
+        variant="contained"
+        onClick={() => {
+          parseNewAccount();
+        }}
+      >
+        Parse another wallet
+      </Button>
+    </FormStyle>
+  );
+
   return (
     (parsingStatus === ParsingStatus.Idle && parsingForm) ||
-    (parsingStatus === ParsingStatus.Done && successForm)
+    (parsingStatus === ParsingStatus.Done && successForm) ||
+    (parsingStatus === ParsingStatus.Fail && failForm)
   );
 }

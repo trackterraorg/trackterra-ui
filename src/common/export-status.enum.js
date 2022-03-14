@@ -1,8 +1,8 @@
 const ExportStatus = {
-  Idle: 0,
-  Processing: 1,
-  Done: 2,
-  Fail: 3
+  Processing: 0,
+  Done: 1,
+  Fail: 2,
+  Idle: 3
 };
 
 export default ExportStatus;
