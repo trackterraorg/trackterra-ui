@@ -70,6 +70,7 @@ export default function ParserForm() {
       const { address } = formik.values;
       if (address) {
         setParsingStatus(() => ParsingStatus.Parsing);
+        setParsingMsg(() => "Parsing txs, please wait ....");
         parseWallet({ url: `/wallets/parse/${address}` });
       }
     }
@@ -85,7 +86,7 @@ export default function ParserForm() {
     navigate(`/account/${address}/dashboard`, { replace: true });
   };
 
-  const loadingForm = <Loading msg="Parsing txs, please wait ...." />;
+  const loadingForm = <Loading msg={parsingMsg} />;
 
   if (loading || parsingStatus === ParsingStatus.Parsing) return loadingForm;
   if (error) return `Submission error! ${error.message}`;
