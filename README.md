@@ -8,6 +8,9 @@ TrackTerra
     <p align="center">  
 </p>  
 
+## Configuration
+Create a .env file and set this this var
+REACT_APP_API_URL=<api_url>
 ## Installation & Running
   
 ```bash  
