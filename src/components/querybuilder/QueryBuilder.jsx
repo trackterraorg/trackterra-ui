@@ -314,22 +314,18 @@ function isQueryValid(query, context) {
   return valid;
 }
 
-const emptyRule = function () {
-  return {
-    field: null,
-    id: Math.random(),
-    operator: null,
-    value: null
-  };
-};
+const emptyRule = () => ({
+  field: null,
+  id: Math.random(),
+  operator: null,
+  value: null
+});
 
-const emptyGroup = function () {
-  return {
-    combinator: 'and',
-    id: Math.random(),
-    rules: [emptyRule()]
-  };
-};
+const emptyGroup = () => ({
+  combinator: 'and',
+  id: Math.random(),
+  rules: [emptyRule()]
+});
 
 function reducer(state, action) {
   const query = { ...state };

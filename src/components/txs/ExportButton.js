@@ -25,7 +25,7 @@ export default function ExportButton({ exportStatus, onExport, onAfterExport, cs
     }
   };
 
-  const onRetryExport = (_event) => {
+  const onRetryExport = () => {
     setExportApp('');
     onAfterExport();
   };

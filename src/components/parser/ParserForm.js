@@ -2,11 +2,9 @@ import * as Yup from 'yup';
 import { useEffect, useState } from 'react';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { AccAddress } from '@terra-money/terra.js';
-import { useNavigate } from 'react-router-dom';
 // material
 import { Box, Stack, TextField, Typography, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import _ from 'lodash';
 import useAxios from 'axios-hooks';
 import { apiOptions } from '../../utils/apiSettings';
 import Loading from '../Loading';
@@ -24,7 +22,6 @@ const FormStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function ParserForm() {
-  const navigate = useNavigate();
   const ParserSchema = Yup.object().shape({
     address: Yup.string()
       .required('Account address is required!')

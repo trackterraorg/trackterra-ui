@@ -42,7 +42,7 @@ export default function TxPage() {
   const [exportStatus, setExportStatus] = useState(ExportStatus.Idle);
   const [taxApp, setTaxApp] = useState();
   const [csvFileUrl, setCsvFileUrl] = useState('');
-  const [{ data, loading, error }, refetch] = useAxios(
+  const [{ data, loading }] = useAxios(
     apiOptions({
       url: `/txs/${address}`,
       params: {
@@ -55,7 +55,7 @@ export default function TxPage() {
     })
   );
 
-  const [{ data: exportData, loading: exportLoading, error: exportError }, exportFunc] = useAxios(
+  const [{ data: exportData }, exportFunc] = useAxios(
     apiOptions({
       url: `/txs/${address}`,
       params: {

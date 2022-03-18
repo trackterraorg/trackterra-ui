@@ -5,7 +5,6 @@ import { styled } from '@mui/material/styles';
 //
 import { AccAddress } from '@terra-money/terra.js';
 import useAxios from 'axios-hooks';
-import Loading from '../../components/Loading';
 import NotParsed from '../../pages/NotParsed';
 import DashboardNavbar from './DashboardNavbar';
 import DashboardSidebar from './DashboardSidebar';
@@ -40,7 +39,7 @@ export default function DashboardLayout() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const { address } = useParams();
-  const [{ data, loading, error }, readWallet] = useAxios(
+  const [{ data, error }, readWallet] = useAxios(
     apiOptions({
       url: `/wallets/${address}`
     }),
