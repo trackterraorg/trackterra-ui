@@ -11,13 +11,23 @@ TrackTerra
 ## Configuration
 Create a .env file and set this this var
 REACT_APP_API_URL=<api_url>
-## Installation & Running
+## Installation
   
 ```bash  
 $ yarn install
-$ yarn start
 ```   
+
+## Development
   
+```bash  
+$ yarn build
+```   
+
+## Deployment
+```bash  
+$ yarn build
+``` 
+It is recommended to use nginx as reverse proxy server when deploying node apps. Please refer to this [link](https://blog.logrocket.com/how-to-run-a-node-js-server-with-nginx/) for more information. 
 ## Special Thanks  
   
   This project wouldn't be possible without this awesome project,
