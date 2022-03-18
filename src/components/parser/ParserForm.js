@@ -83,7 +83,7 @@ export default function ParserForm() {
 
   const goToDashBoard = () => {
     const { address } = formik.values;
-    navigate(`/account/${address}/dashboard`, { replace: true });
+    window.location.replace(`/account/${address}/dashboard`);
   };
 
   const loadingForm = <Loading msg={parsingMsg} />;
