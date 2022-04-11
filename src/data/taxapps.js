@@ -1,7 +1,8 @@
 export const TAX_APPS = [
-  { value: 'koinly', label: 'Koinly' },
-  { value: 'cointracker', label: 'Coin tracker' },
-  { value: 'coinledger', label: 'Coin ledger' },
+  { value: 'coinledger', label: 'Coinledger' },
+  { value: 'cointracker', label: 'Cointracker' },
+  { value: 'cointracking', label: 'Cointracking' },
   { value: 'cryptotaxcalculator', label: 'Crypto tax calculator' },
-  { value: 'zenledger', label: 'Zen ledger' }
+  { value: 'koinly', label: 'Koinly' },
+  { value: 'zenledger', label: 'Zenledger' }
 ];
