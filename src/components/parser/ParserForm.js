@@ -30,7 +30,7 @@ export default function ParserForm() {
       )
   });
 
-  const [{ data, loading, error }, parseWallet] = useAxios(
+  const [{ response, loading, error }, parseWallet] = useAxios(
     apiOptions({
       method: 'PUT',
       timeout: 600000
@@ -41,11 +41,12 @@ export default function ParserForm() {
   const [parsingMsg, setParsingMsg] = useState('');
 
   useEffect(() => {
-    if (data) {
+    if (response) {
+      const { data } = response.data;
       setParsingStatus(parseInt(data.status, 10));
-      setParsingMsg(data.msg);
+      setParsingMsg(response.msg);
     }
-  }, [data]);
+  }, [response]);
 
   const formik = useFormik({
     initialValues: {

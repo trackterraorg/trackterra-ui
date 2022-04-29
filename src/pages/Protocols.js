@@ -71,7 +71,7 @@ export default () => {
   const [orderBy, setOrderBy] = useState('protocolName');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [{ data, loading, error }] = useAxios(
+  const [{ response, loading, error }] = useAxios(
     apiOptions({
       url: '/parser/protocols'
     })
@@ -98,6 +98,7 @@ export default () => {
 
   if (loading) return null;
   if (error) return <>{error.message}</>;
+  const { data } = response.data;
   const SUPPORTED_PROTOCOLS = data;
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - SUPPORTED_PROTOCOLS.length) : 0;
@@ -111,7 +112,7 @@ export default () => {
   const isProtocolNotFound = filteredProtocols.length === 0;
 
   return (
-    data && (
+    response && (
       <Page title="Protocols | TrackTerra">
         <Container>
           <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>

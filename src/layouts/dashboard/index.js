@@ -39,7 +39,7 @@ export default function DashboardLayout() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const { address } = useParams();
-  const [{ data, error }, readWallet] = useAxios(
+  const [{ response, error }, readWallet] = useAxios(
     apiOptions({
       url: `/wallets/${address}`
     }),
@@ -58,7 +58,8 @@ export default function DashboardLayout() {
   if (error) return `Fetch data error ${error.message}`;
 
   let sAddress;
-  if (data) {
+  if (response) {
+    const { data } = response.data;
     const { wallet, extras } = data;
     if (!(wallet && extras.parsed)) {
       return <NotParsed />;

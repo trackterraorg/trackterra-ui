@@ -21,6 +21,8 @@ import {
 } from '@mui/material';
 // components
 import useAxios from 'axios-hooks';
+import { v1 as uuid } from 'uuid';
+import Loading from '../components/Loading';
 import { ExportStatus } from '../common';
 import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
@@ -42,12 +44,12 @@ export default function TxPage() {
   const [exportStatus, setExportStatus] = useState(ExportStatus.Idle);
   const [taxApp, setTaxApp] = useState();
   const [csvFileUrl, setCsvFileUrl] = useState('');
-  const [{ data, loading }] = useAxios(
+  const [{ response, loading }] = useAxios(
     apiOptions({
       url: `/txs/${address}`,
       params: {
         page: page + 1,
-        take: rowsPerPage,
+        limit: rowsPerPage,
         q,
         order,
         orderBy
@@ -83,8 +85,9 @@ export default function TxPage() {
 
   useEffect(() => {
     if (exportData) {
+      const { data: exportDataResponse } = exportData;
       setExportStatus(ExportStatus.Done);
-      setCsvFileUrl(getCsvFileUrl(address, exportData.csvFileName));
+      setCsvFileUrl(getCsvFileUrl(address, exportDataResponse.csvFileName));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exportData]);
@@ -121,7 +124,9 @@ export default function TxPage() {
     setTaxApp('');
   };
 
-  // if (loading) return <Loading msg="Loading transactions, please wait ...." />;
+  if (loading) return <Loading key={uuid()} msg="Loading transactions, please wait ...." />;
+
+  const { data } = response?.data;
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 

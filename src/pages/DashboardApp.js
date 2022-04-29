@@ -19,7 +19,7 @@ import Loading from '../components/Loading';
 
 export default function DashboardApp() {
   const { address } = useParams();
-  const [{ data, loading, error }] = useAxios(
+  const [{ response, loading, error }] = useAxios(
     apiOptions({
       url: `/wallets/detail/${address}`
     })
@@ -27,6 +27,7 @@ export default function DashboardApp() {
 
   if (loading) return <Loading msg="Loading, please wait ...." />;
   if (error) return `Fetch data error ${error.message}`;
+  const { data } = response.data;
   const walletDetail = data;
 
   const {
@@ -52,7 +53,7 @@ export default function DashboardApp() {
             <LastParsingTime lastParsingTime={lastParsingTime} />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <HighestParsedBlock highestParsedBlock={highestParsedBlock} />
+            <HighestParsedBlock highestParsedBlock={parseInt(highestParsedBlock, 10)} />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <UnclassifiedTxCount unclassifiedTxCount={unclassifiedTxCount} />
