@@ -61,7 +61,7 @@ export default function DashboardLayout() {
   if (response) {
     const { data } = response.data;
     const { wallet, extras } = data;
-    if (!(wallet && extras.parsed)) {
+    if (!wallet) {
       return <NotParsed />;
     }
 

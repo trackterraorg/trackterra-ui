@@ -44,7 +44,7 @@ export default function ParserForm() {
     if (response) {
       const { data } = response.data;
       setParsingStatus(parseInt(data.status, 10));
-      setParsingMsg(response.msg);
+      setParsingMsg(data.msg);
     }
   }, [response]);
 
@@ -85,10 +85,6 @@ export default function ParserForm() {
   };
 
   const loadingForm = <Loading msg={parsingMsg} />;
-
-  if (loading || parsingStatus === ParsingStatus.Parsing) return loadingForm;
-  if (error) return `Submission error! ${error.message}`;
-
   const parsingForm = (
     <FormStyle>
       <Box sx={{ mb: 5 }}>
@@ -132,7 +128,8 @@ export default function ParserForm() {
     <FormStyle>
       <Box sx={{ mb: 5 }}>
         <Typography variant="h4" gutterBottom>
-          Parsing completed
+          {parsingStatus === ParsingStatus.Parsing && 'Already Parsing'}
+          {parsingStatus === ParsingStatus.Done && 'Parsing Completed'}
         </Typography>
         <Typography sx={{ color: 'text.secondary' }}>{parsingMsg}</Typography>
       </Box>
@@ -176,9 +173,21 @@ export default function ParserForm() {
     </FormStyle>
   );
 
-  return (
-    (parsingStatus === ParsingStatus.Idle && parsingForm) ||
-    (parsingStatus === ParsingStatus.Done && successForm) ||
-    (parsingStatus === ParsingStatus.Fail && failForm)
-  );
+  const selectForm = () => {
+    switch (parsingStatus) {
+      case ParsingStatus.Idle:
+        return parsingForm;
+      case ParsingStatus.Fail:
+        return failForm;
+      case ParsingStatus.Done:
+      case ParsingStatus.Parsing:
+        return successForm;
+      default:
+        return loadingForm;
+    }
+  };
+
+  if (loading) return loadingForm;
+  if (error) return `Submission error! ${error.message}`;
+  return selectForm();
 }

@@ -53,7 +53,11 @@ export default function DashboardApp() {
             <LastParsingTime lastParsingTime={lastParsingTime} />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <HighestParsedBlock highestParsedBlock={parseInt(highestParsedBlock, 10)} />
+            <HighestParsedBlock
+              highestParsedBlock={
+                Number.isNaN(highestParsedBlock) ? '---' : parseInt(highestParsedBlock, 10)
+              }
+            />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <UnclassifiedTxCount unclassifiedTxCount={unclassifiedTxCount} />
