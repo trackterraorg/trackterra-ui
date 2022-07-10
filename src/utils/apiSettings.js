@@ -14,4 +14,5 @@ export const apiOptions = (options) => {
   return apiOptions;
 };
 
-export const getCsvFileUrl = (address, csvFile) => `${API_URL}/txs/csv/${address}/${csvFile}`;
+export const getCsvFileUrl = (address, csvFile) =>
+  `${API_URL}/txs/csv?address=${address}&filename=${csvFile}`;
