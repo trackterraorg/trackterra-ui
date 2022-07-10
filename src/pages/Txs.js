@@ -34,7 +34,7 @@ import { TABLE_FIELDS } from '../data/txs';
 // ----------------------------------------------------------------------
 
 export default function TxPage() {
-  const { address } = useParams();
+  const { chain, address } = useParams();
   const [page, setPage] = useState(0);
   const [q, setQ] = useState();
   const [order, setOrder] = useState();
@@ -46,8 +46,10 @@ export default function TxPage() {
   const [csvFileUrl, setCsvFileUrl] = useState('');
   const [{ response, loading }] = useAxios(
     apiOptions({
-      url: `/txs/${address}`,
+      url: `/txs`,
       params: {
+        chain: _.capitalize(chain),
+        address,
         page: page + 1,
         limit: rowsPerPage,
         q,
@@ -59,8 +61,10 @@ export default function TxPage() {
 
   const [{ data: exportData }, exportFunc] = useAxios(
     apiOptions({
-      url: `/txs/${address}`,
+      url: `/txs`,
       params: {
+        chain: _.capitalize(chain),
+        address,
         q,
         order,
         orderBy,
