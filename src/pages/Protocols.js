@@ -1,4 +1,4 @@
-import { filter } from 'lodash';
+import _, { filter } from 'lodash';
 import { useState } from 'react';
 // material
 import {
@@ -16,6 +16,7 @@ import {
 // components
 import { v1 as uuid } from 'uuid';
 import useAxios from 'axios-hooks';
+import { useParams } from 'react-router-dom';
 import { apiOptions } from '../utils/apiSettings';
 import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
@@ -66,6 +67,7 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default () => {
+  const { chain } = useParams();
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('protocolName');
@@ -73,7 +75,10 @@ export default () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [{ response, loading, error }] = useAxios(
     apiOptions({
-      url: '/parser/protocols'
+      url: '/parser/protocols',
+      params: {
+        chain: _.capitalize(chain)
+      }
     })
   );
 
