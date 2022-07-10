@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 //
 import { AccAddress } from '@terra-money/terra.js';
 import useAxios from 'axios-hooks';
+import _ from 'lodash';
 import NotParsed from '../../pages/NotParsed';
 import DashboardNavbar from './DashboardNavbar';
 import DashboardSidebar from './DashboardSidebar';
@@ -38,10 +39,14 @@ const MainStyle = styled('div')(({ theme }) => ({
 export default function DashboardLayout() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const { address } = useParams();
+  const { chain, address } = useParams();
   const [{ response, error }, readWallet] = useAxios(
     apiOptions({
-      url: `/wallets/${address}`
+      url: `/wallets`,
+      params: {
+        chai: _.capitalize(chain),
+        address
+      }
     }),
     { manual: true }
   );
@@ -53,7 +58,7 @@ export default function DashboardLayout() {
       readWallet();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [address]);
+  }, [chain, address]);
 
   if (error) return `Fetch data error ${error.message}`;
 
@@ -70,8 +75,9 @@ export default function DashboardLayout() {
 
   return (
     <RootStyle>
-      <DashboardNavbar address={address} onOpenSidebar={() => setOpen(true)} />
+      <DashboardNavbar chain={chain} address={address} onOpenSidebar={() => setOpen(true)} />
       <DashboardSidebar
+        chain={chain}
         address={address}
         sAddress={sAddress}
         isOpenSidebar={open}

@@ -5,6 +5,7 @@ import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
 // components
+import _ from 'lodash';
 import Logo from '../../components/Logo';
 import Scrollbar from '../../components/Scrollbar';
 import NavSection from '../../components/NavSection';
@@ -34,13 +35,20 @@ const AccountStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 DashboardSidebar.propTypes = {
+  chain: PropTypes.string,
   address: PropTypes.string,
   sAddress: PropTypes.string,
   isOpenSidebar: PropTypes.bool,
   onCloseSidebar: PropTypes.func
 };
 
-export default function DashboardSidebar({ address, sAddress, isOpenSidebar, onCloseSidebar }) {
+export default function DashboardSidebar({
+  chain,
+  address,
+  sAddress,
+  isOpenSidebar,
+  onCloseSidebar
+}) {
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -69,6 +77,9 @@ export default function DashboardSidebar({ address, sAddress, isOpenSidebar, onC
             <Avatar src="/static/wallet.png" alt="photoURL" />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
+                {_.capitalize(chain)}
+              </Typography>
+              <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
                 {sAddress}
               </Typography>
             </Box>
@@ -76,7 +87,7 @@ export default function DashboardSidebar({ address, sAddress, isOpenSidebar, onC
         </Link>
       </Box>
 
-      <NavSection navConfig={sidebarConfig(address)} />
+      <NavSection navConfig={sidebarConfig(chain, address)} />
 
       <Box sx={{ flexGrow: 1 }} />
 

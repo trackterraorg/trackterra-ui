@@ -7,6 +7,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, MenuItem, Typography, Avatar, IconButton } from '@mui/material';
 // components
+import _ from 'lodash';
 import MenuPopover from '../../components/MenuPopover';
 //
 // ----------------------------------------------------------------------
@@ -22,10 +23,11 @@ const MENU_OPTIONS = [
 // ----------------------------------------------------------------------
 
 AccountPopover.propTypes = {
+  chain: PropTypes.string,
   address: PropTypes.string
 };
 
-export default function AccountPopover({ address }) {
+export default function AccountPopover({ chain, address }) {
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
 
@@ -69,7 +71,16 @@ export default function AccountPopover({ address }) {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle1" noWrap>
-            Current Address
+            Chain
+          </Typography>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+            {_.capitalize(chain)}
+          </Typography>
+        </Box>
+
+        <Box sx={{ my: 1.5, px: 2.5 }}>
+          <Typography variant="subtitle1" noWrap>
+            Address
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
             {address}

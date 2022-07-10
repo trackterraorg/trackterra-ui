@@ -36,11 +36,12 @@ const ToolbarStyle = styled(Toolbar)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 DashboardNavbar.propTypes = {
+  chain: PropTypes.string,
   address: PropTypes.string,
   onOpenSidebar: PropTypes.func
 };
 
-export default function DashboardNavbar({ address, onOpenSidebar }) {
+export default function DashboardNavbar({ chain, address, onOpenSidebar }) {
   return (
     <RootStyle>
       <ToolbarStyle>
@@ -53,7 +54,7 @@ export default function DashboardNavbar({ address, onOpenSidebar }) {
         <Box sx={{ flexGrow: 1 }} />
 
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
-          <AccountPopover address={address} />
+          <AccountPopover chain={chain} address={address} />
         </Stack>
       </ToolbarStyle>
     </RootStyle>

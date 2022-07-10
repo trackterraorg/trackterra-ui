@@ -7,20 +7,20 @@ import creditCardOutline from '@iconify/icons-eva/credit-card-outline';
 
 const getIcon = (name) => <Icon icon={name} width={22} height={22} />;
 
-const sidebarConfig = (address) => [
+const sidebarConfig = (chain, address) => [
   {
     title: 'Dashboard',
-    path: `/account/${address}/dashboard`,
+    path: `/account/${chain}/${address}/dashboard`,
     icon: getIcon(pieChart2Fill)
   },
   {
     title: 'Transactions',
-    path: `/account/${address}/txs`,
+    path: `/account/${chain}/${address}/txs`,
     icon: getIcon(creditCardOutline)
   },
   {
     title: 'Supported protocols',
-    path: `/account/${address}/protocols`,
+    path: `/account/${chain}/${address}/protocols`,
     icon: getIcon(fileDoneOutline)
   }
 ];

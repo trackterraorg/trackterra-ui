@@ -14,7 +14,7 @@ import ProtocolsPage from './pages/Protocols';
 export default function Router() {
   return useRoutes([
     {
-      path: '/account/:address',
+      path: '/account/:chain/:address',
       element: <DashboardLayout />,
       children: [
         { element: <Navigate to="dashboard" replace /> },
