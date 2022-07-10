@@ -3,12 +3,25 @@ import { useEffect, useState } from 'react';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { AccAddress } from '@terra-money/terra.js';
 // material
-import { Box, Stack, TextField, Typography, Button } from '@mui/material';
+import {
+  Box,
+  Stack,
+  TextField,
+  Typography,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  FormHelperText
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import useAxios from 'axios-hooks';
+import _ from 'lodash';
 import { apiOptions } from '../../utils/apiSettings';
 import Loading from '../Loading';
 import ParsingStatus from '../../common/parsing-status.enum';
+import chains from '../../data/chains';
 // ----------------------------------------------------------------------
 const FormStyle = styled('div')(({ theme }) => ({
   maxWidth: 480,
@@ -23,6 +36,13 @@ const FormStyle = styled('div')(({ theme }) => ({
 
 export default function ParserForm() {
   const ParserSchema = Yup.object().shape({
+    chain: Yup.string()
+      .required('Chain is required!')
+      .test(
+        'is-chain-provided',
+        'Please select a valid chain',
+        (value) => !_.isEmpty(_.find(chains), { value })
+      ),
     address: Yup.string()
       .required('Account address is required!')
       .test('is-terra-account', 'Please enter a valid terra account', (value) =>
@@ -50,7 +70,8 @@ export default function ParserForm() {
 
   const formik = useFormik({
     initialValues: {
-      address: ''
+      address: '',
+      chain: ''
     },
     validationSchema: ParserSchema,
     onSubmit: () => {}
@@ -65,11 +86,17 @@ export default function ParserForm() {
 
     formik.handleSubmit();
     if (formik.isValid) {
-      const { address } = formik.values;
-      if (address) {
+      const { address, chain } = formik.values;
+      if (address && chain) {
         setParsingStatus(() => ParsingStatus.Parsing);
         setParsingMsg(() => 'Parsing txs, please wait ....');
-        parseWallet({ url: `/wallets/parse/${address}` });
+        parseWallet({
+          url: `/wallets/parse`,
+          params: {
+            chain,
+            address
+          }
+        });
       }
     }
   };
@@ -80,8 +107,8 @@ export default function ParserForm() {
   };
 
   const goToDashBoard = () => {
-    const { address } = formik.values;
-    window.location.replace(`/account/${address}/dashboard`);
+    const { address, chain } = formik.values;
+    window.location.replace(`/account/${_.lowerCase(chain)}/${address}/dashboard`);
   };
 
   const loadingForm = <Loading msg={parsingMsg} />;
@@ -114,6 +141,26 @@ export default function ParserForm() {
               error={Boolean(touched.address && errors.address)}
               helperText={touched.address && errors.address}
             />
+
+            <FormControl fullWidth error={Boolean(touched.chain && errors.chain)}>
+              <InputLabel id="chain-helper-label">Chain</InputLabel>
+              <Select
+                labelId="chain-helper-label"
+                id="demo-simple-select-helper"
+                // value={age}
+                {...getFieldProps('chain')}
+                label="Chain"
+              >
+                {chains.map((chain) => (
+                  <MenuItem key={chain.value} value={chain.label}>
+                    {chain.label}
+                  </MenuItem>
+                ))}
+              </Select>
+              {Boolean(touched.chain && errors.chain) && (
+                <FormHelperText>Chain is required!</FormHelperText>
+              )}
+            </FormControl>
 
             <Button color="secondary" fullWidth size="large" type="submit" variant="contained">
               Start parsing
