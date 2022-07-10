@@ -3,6 +3,7 @@ import { Box, Grid, Container, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import useAxios from 'axios-hooks';
 // components
+import _ from 'lodash';
 import Page from '../components/Page';
 import {
   LastParsingTime,
@@ -18,10 +19,14 @@ import Loading from '../components/Loading';
 // ----------------------------------------------------------------------
 
 export default function DashboardApp() {
-  const { address } = useParams();
+  const { chain, address } = useParams();
   const [{ response, loading, error }] = useAxios(
     apiOptions({
-      url: `/wallets/detail/${address}`
+      url: `/wallets/detail`,
+      params: {
+        chain: _.capitalize(chain),
+        address
+      }
     })
   );
 

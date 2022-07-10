@@ -44,7 +44,7 @@ export default function DashboardLayout() {
     apiOptions({
       url: `/wallets`,
       params: {
-        chai: _.capitalize(chain),
+        chain: _.capitalize(chain),
         address
       }
     }),
