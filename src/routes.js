@@ -8,6 +8,7 @@ import NotFound from './pages/Page404';
 import Home from './pages/Home';
 import TxPage from './pages/Txs';
 import ProtocolsPage from './pages/Protocols';
+import ReparsePage from './pages/Reparse';
 
 // ----------------------------------------------------------------------
 
@@ -20,7 +21,8 @@ export default function Router() {
         { element: <Navigate to="dashboard" replace /> },
         { path: 'dashboard', element: <DashboardApp /> },
         { path: 'txs', element: <TxPage /> },
-        { path: 'protocols', element: <ProtocolsPage /> }
+        { path: 'protocols', element: <ProtocolsPage /> },
+        { path: 'reparse', element: <ReparsePage /> }
       ]
     },
     {
