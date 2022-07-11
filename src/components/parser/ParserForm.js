@@ -1,7 +1,8 @@
 import * as Yup from 'yup';
 import { useEffect, useState } from 'react';
-import { useFormik, Form, FormikProvider } from 'formik';
+import { useFormik, Form, FormikProvider, ErrorMessage } from 'formik';
 import { AccAddress } from '@terra-money/terra.js';
+
 // material
 import {
   Box,
@@ -13,11 +14,13 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  FormHelperText
+  FormHelperText,
+  Divider
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import useAxios from 'axios-hooks';
 import _ from 'lodash';
+import { ConnectWalletButton } from '../wallet';
 import { apiOptions } from '../../utils/apiSettings';
 import Loading from '../Loading';
 import ParsingStatus from '../../common/parsing-status.enum';
@@ -101,6 +104,13 @@ export default function ParserForm() {
     }
   };
 
+  const onUseWallet = (chain, address) => {
+    formik.setValues({
+      chain,
+      address
+    });
+  };
+
   const parseNewAccount = () => {
     setParsingStatus(ParsingStatus.Idle);
     formik.resetForm();
@@ -119,7 +129,7 @@ export default function ParserForm() {
           Enter your account address
         </Typography>
         <Typography sx={{ color: 'text.secondary' }}>
-          Start by entering your account address below
+          Start by entering your account address manually
         </Typography>
       </Box>
       <FormikProvider value={formik}>
@@ -162,8 +172,14 @@ export default function ParserForm() {
               )}
             </FormControl>
 
+            <Divider>Or use your wallet</Divider>
+
+            <ConnectWalletButton onUseWallet={onUseWallet} />
+
+            <Divider />
+
             <Button color="secondary" fullWidth size="large" type="submit" variant="contained">
-              Start parsing
+              Start Parsing
             </Button>
           </Stack>
         </Form>
@@ -220,21 +236,25 @@ export default function ParserForm() {
     </FormStyle>
   );
 
-  const selectForm = () => {
-    switch (parsingStatus) {
-      case ParsingStatus.Idle:
-        return parsingForm;
-      case ParsingStatus.Fail:
-        return failForm;
-      case ParsingStatus.Done:
-      case ParsingStatus.Parsing:
-        return successForm;
-      default:
-        return loadingForm;
-    }
-  };
-
   if (loading) return loadingForm;
-  if (error) return `Submission error! ${error.message}`;
-  return selectForm();
+
+  if (error) return <ErrorMessage title="Error" msg={`Submission error! ${error.message}`} />;
+
+  if (parsingStatus === ParsingStatus.Idle) {
+    return parsingForm;
+  }
+
+  if (parsingStatus === ParsingStatus.Fail) {
+    return failForm;
+  }
+
+  if (parsingStatus === ParsingStatus.Done) {
+    return successForm;
+  }
+
+  if (parsingStatus === ParsingStatus.Parsing) {
+    return successForm;
+  }
+
+  return loadingForm;
 }

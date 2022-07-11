@@ -5,20 +5,25 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 //
+import { getChainOptions, WalletProvider } from '@terra-money/wallet-provider';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import reportWebVitals from './reportWebVitals';
 
 // ----------------------------------------------------------------------
 
-ReactDOM.render(
-  <HelmetProvider>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </HelmetProvider>,
-  document.getElementById('root')
-);
+getChainOptions().then((chainOptions) => {
+  ReactDOM.render(
+    <HelmetProvider>
+      <BrowserRouter>
+        <WalletProvider {...chainOptions}>
+          <App />
+        </WalletProvider>
+      </BrowserRouter>
+    </HelmetProvider>,
+    document.getElementById('root')
+  );
+});
 
 // If you want to enable client cache, register instead.
 serviceWorker.unregister();

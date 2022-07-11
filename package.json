@@ -48,6 +48,7 @@
     "@mui/material": "^5.0.0",
     "@mui/utils": "^5.0.0",
     "@terra-money/terra.js": "^3.0.4",
+    "@terra-money/wallet-provider": "^3.9.4",
     "@testing-library/jest-dom": "^5.14.1",
     "apexcharts": "^3.28.3",
     "array-move": "^4.0.0",
