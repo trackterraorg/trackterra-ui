@@ -70,7 +70,7 @@ export default function ParserForm() {
 
     if (status === ParsingStatus.Done) {
       return (
-        <div>
+        <FormStyle>
           <SuccessMessage msg={msg} />
           <Button
             color="info"
@@ -84,7 +84,7 @@ export default function ParserForm() {
           >
             Go to transactions
           </Button>
-        </div>
+        </FormStyle>
       );
     }
 
@@ -107,9 +107,6 @@ export default function ParserForm() {
     <div>
       <FormStyle>
         <Box sx={{ mb: 3 }}>
-          <Typography variant="h4" gutterBottom>
-            Reparse
-          </Typography>
           <Typography sx={{ color: 'text.secondary' }}>
             Reparsing is usefull when the account is has not been parsed for a long time or new
             protocols are added to the system

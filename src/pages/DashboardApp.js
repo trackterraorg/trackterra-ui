@@ -15,6 +15,7 @@ import {
 } from '../components/_dashboard/app';
 import { apiOptions } from '../utils/apiSettings';
 import Loading from '../components/Loading';
+import ErrorMessage from '../components/ErrorMessage';
 
 // ----------------------------------------------------------------------
 
@@ -31,7 +32,7 @@ export default function DashboardApp() {
   );
 
   if (loading) return <Loading msg="Loading, please wait ...." />;
-  if (error) return `Fetch data error ${error.message}`;
+  if (error) return <ErrorMessage msg={`Fetch data error ${error.message}`} />;
   const { data } = response.data;
   const walletDetail = data;
 

@@ -10,6 +10,7 @@ import NotParsed from '../../pages/NotParsed';
 import DashboardNavbar from './DashboardNavbar';
 import DashboardSidebar from './DashboardSidebar';
 import { apiOptions } from '../../utils/apiSettings';
+import ErrorMessage from '../../components/ErrorMessage';
 // ----------------------------------------------------------------------
 
 const APP_BAR_MOBILE = 64;
@@ -60,7 +61,7 @@ export default function DashboardLayout() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chain, address]);
 
-  if (error) return `Fetch data error ${error.message}`;
+  if (error) return <ErrorMessage msg={`Errro fetching data: ${error.message}`} />;
 
   let sAddress;
   if (response) {
