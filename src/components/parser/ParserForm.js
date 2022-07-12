@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { useEffect, useState } from 'react';
-import { useFormik, Form, FormikProvider, ErrorMessage } from 'formik';
+import { useFormik, Form, FormikProvider } from 'formik';
 import { AccAddress } from '@terra-money/terra.js';
 
 // material
@@ -25,6 +25,7 @@ import { apiOptions } from '../../utils/apiSettings';
 import Loading from '../Loading';
 import ParsingStatus from '../../common/parsing-status.enum';
 import chains from '../../data/chains';
+import ErrorMessage from '../ErrorMessage';
 // ----------------------------------------------------------------------
 const FormStyle = styled('div')(({ theme }) => ({
   maxWidth: 480,
@@ -238,7 +239,7 @@ export default function ParserForm() {
 
   if (loading) return loadingForm;
 
-  if (error) return <ErrorMessage title="Error" msg={`Submission error! ${error.message}`} />;
+  if (error) return <ErrorMessage msg={`Submission error! ${error.message}`} />;
 
   if (parsingStatus === ParsingStatus.Idle) {
     return parsingForm;
