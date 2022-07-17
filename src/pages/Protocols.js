@@ -17,6 +17,7 @@ import {
 import { v1 as uuid } from 'uuid';
 import useAxios from 'axios-hooks';
 import { useParams } from 'react-router-dom';
+import ErrorMessage from '../components/ErrorMessage';
 import { apiOptions } from '../utils/apiSettings';
 import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
@@ -102,7 +103,9 @@ export default () => {
   };
 
   if (loading) return null;
-  if (error) return <>{error.message}</>;
+
+  if (error) return <ErrorMessage msg={error.message} />;
+
   const { data } = response.data;
   const SUPPORTED_PROTOCOLS = data;
   const emptyRows =

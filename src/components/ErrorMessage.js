@@ -9,6 +9,7 @@ import palette from '../theme/palette';
 const RootStyle = styled('div')(({ theme }) => ({
   alignContent: 'center',
   alignItems: 'center',
+  minHeight: '200px',
   width: '100%',
   height: '100%',
   display: 'flex',
