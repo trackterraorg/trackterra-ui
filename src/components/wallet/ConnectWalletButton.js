@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Divider,
   Stack
 } from '@mui/material';
 import { useWallet, WalletStatus } from '@terra-money/wallet-provider';
@@ -38,6 +39,14 @@ export default function ConnectWalletButton({ onUseWallet }) {
   const handleErrorDialogClose = () => {
     setOpenErrorDialog(false);
   };
+
+  const extensionAvailable = availableConnectTypes.find(
+    (availableConnectionType) => availableConnectionType === 'EXTENSION'
+  );
+
+  if (!extensionAvailable) {
+    return <></>;
+  }
 
   const terraStationOnly = availableConnections.find(
     (availableConnection) => availableConnection.name === 'Terra Station Wallet'
@@ -73,6 +82,7 @@ export default function ConnectWalletButton({ onUseWallet }) {
 
   return (
     <>
+      <Divider>Or use your wallet</Divider>
       {status === WalletStatus.WALLET_NOT_CONNECTED && terraStationOnly && (
         <>
           <Button
@@ -109,6 +119,8 @@ export default function ConnectWalletButton({ onUseWallet }) {
           </Button>
         </Stack>
       )}
+
+      <Divider />
 
       <Dialog
         open={openErrorDialog}

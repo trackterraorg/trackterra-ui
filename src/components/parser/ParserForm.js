@@ -173,11 +173,7 @@ export default function ParserForm() {
               )}
             </FormControl>
 
-            <Divider>Or use your wallet</Divider>
-
             <ConnectWalletButton onUseWallet={onUseWallet} />
-
-            <Divider />
 
             <Button color="secondary" fullWidth size="large" type="submit" variant="contained">
               Start Parsing
