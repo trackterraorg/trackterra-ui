@@ -14,7 +14,5 @@ export const TABLE_FIELDS = [
   { id: 'sSender', label: 'Sender', alignRight: false },
   { id: 'sRecipient', label: 'Recipient', alignRight: false },
   { id: 'taxAmount', label: 'Tax amount', alignRight: false },
-  { id: 'taxToken', label: 'Tax token', alignRight: false },
-  { id: 'netWorthAmount', label: 'Networth amount', alignRight: false },
-  { id: 'netWorthToken', label: 'Networth token', alignRight: false }
+  { id: 'taxToken', label: 'Tax token', alignRight: false }
 ];
