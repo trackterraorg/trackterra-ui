@@ -108,7 +108,7 @@ export default function ParserForm() {
       <FormStyle>
         <Box sx={{ mb: 3 }}>
           <Typography sx={{ color: 'text.secondary' }}>
-            Reparsing is usefull when the account is has not been parsed for a long time or new
+            Reparsing is useful when the account is has not been parsed for a long time or new
             protocols are added to the system
           </Typography>
 
