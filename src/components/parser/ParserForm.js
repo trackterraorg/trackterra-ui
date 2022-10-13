@@ -14,8 +14,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  FormHelperText,
-  Divider
+  FormHelperText
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import useAxios from 'axios-hooks';

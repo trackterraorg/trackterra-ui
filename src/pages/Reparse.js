@@ -1,5 +1,4 @@
 // material
-import { styled } from '@mui/material/styles';
 import { Card, Container, Stack, Typography } from '@mui/material';
 // components
 import Page from '../components/Page';
