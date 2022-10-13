@@ -9,6 +9,7 @@ import { getChainOptions, WalletProvider } from '@terra-money/wallet-provider';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import reportWebVitals from './reportWebVitals';
+import SocketProvider from './socket_context';
 
 // ----------------------------------------------------------------------
 
@@ -16,9 +17,11 @@ getChainOptions().then((chainOptions) => {
   ReactDOM.render(
     <HelmetProvider>
       <BrowserRouter>
-        <WalletProvider {...chainOptions}>
-          <App />
-        </WalletProvider>
+        <SocketProvider>
+          <WalletProvider {...chainOptions}>
+            <App />
+          </WalletProvider>
+        </SocketProvider>
       </BrowserRouter>
     </HelmetProvider>,
     document.getElementById('root')

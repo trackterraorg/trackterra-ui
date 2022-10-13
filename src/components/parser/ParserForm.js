@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { AccAddress } from '@terra-money/terra.js';
 
@@ -19,6 +19,7 @@ import {
 import { styled } from '@mui/material/styles';
 import useAxios from 'axios-hooks';
 import _ from 'lodash';
+import SocketContext from '../../socket_context/context';
 import { ConnectWalletButton } from '../wallet';
 import { apiOptions } from '../../utils/apiSettings';
 import Loading from '../Loading';
@@ -53,6 +54,14 @@ export default function ParserForm() {
       )
   });
 
+  const {
+    address: sAddress,
+    chain: sChain,
+    msg: sMsg,
+    status: sStatus,
+    numberOfNewParsedTxs: sNumberOfNewParsedTxs
+  } = useContext(SocketContext);
+
   const [{ response, loading, error }, parseWallet] = useAxios(
     apiOptions({
       method: 'PUT',
@@ -61,7 +70,7 @@ export default function ParserForm() {
     { manual: true }
   );
   const [parsingStatus, setParsingStatus] = useState(ParsingStatus.Idle);
-  const [parsingMsg, setParsingMsg] = useState('');
+  const [parsingMsg, setParsingMsg] = useState('Wallet is parsing');
 
   useEffect(() => {
     if (response) {
@@ -183,14 +192,16 @@ export default function ParserForm() {
     </FormStyle>
   );
 
-  const successForm = (
+  const successForm = (msg) => (
     <FormStyle>
       <Box sx={{ mb: 5 }}>
         <Typography variant="h4" gutterBottom>
-          {parsingStatus === ParsingStatus.Parsing && 'Already Parsing'}
-          {parsingStatus === ParsingStatus.Done && 'Parsing Completed'}
+          Success
         </Typography>
-        <Typography sx={{ color: 'text.secondary' }}>{parsingMsg}</Typography>
+        <Typography sx={{ color: 'text.secondary' }}>{msg}</Typography>
+        <Typography sx={{ color: 'text.secondary' }}>
+          {`${sNumberOfNewParsedTxs} new transactions parsed`}{' '}
+        </Typography>
       </Box>
       <Button fullWidth size="large" type="submit" variant="contained" onClick={goToDashBoard}>
         Go to dashboard
@@ -232,6 +243,13 @@ export default function ParserForm() {
     </FormStyle>
   );
 
+  const { address, chain } = formik.values;
+
+  if (sAddress === address && sChain.toLocaleLowerCase() === chain.toLocaleLowerCase()) {
+    if (sStatus === ParsingStatus.Parsing) return <Loading />;
+    if (sStatus === ParsingStatus.Done) return successForm(sMsg);
+  }
+
   if (loading) return loadingForm;
 
   if (error) return <ErrorMessage msg={`Submission error! ${error.message}`} />;
@@ -244,13 +262,10 @@ export default function ParserForm() {
     return failForm;
   }
 
-  if (parsingStatus === ParsingStatus.Done) {
-    return successForm;
-  }
-
-  if (parsingStatus === ParsingStatus.Parsing) {
-    return successForm;
-  }
+  console.log(sStatus, parsingStatus);
+  // if (parsingStatus === ParsingStatus.Parsing) {
+  //   return successForm;
+  // }
 
   return loadingForm;
 }

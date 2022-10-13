@@ -73,6 +73,7 @@
     "react-smooth-dnd": "^0.11.1",
     "simplebar": "^5.3.5",
     "simplebar-react": "^2.3.5",
+    "socket.io-client": "^4.5.2",
     "uuid": "^8.3.2",
     "web-vitals": "^2.1.0",
     "yup": "^0.32.9"
