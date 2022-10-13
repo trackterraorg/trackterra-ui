@@ -62,6 +62,9 @@ export default function ParserForm() {
     numberOfNewParsedTxs: sNumberOfNewParsedTxs
   } = useContext(SocketContext);
 
+  const [chain, setChain] = useState('');
+  const [address, setAddress] = useState('');
+
   const [{ response, loading, error }, parseWallet] = useAxios(
     apiOptions({
       method: 'PUT',
@@ -98,15 +101,16 @@ export default function ParserForm() {
 
     formik.handleSubmit();
     if (formik.isValid) {
-      const { address, chain } = formik.values;
-      if (address && chain) {
-        setParsingStatus(() => ParsingStatus.Parsing);
-        setParsingMsg(() => 'Parsing txs, please wait ....');
+      const { address: fAddress, chain: fChain } = formik.values;
+      setParsingStatus(() => ParsingStatus.Parsing);
+      setChain(() => fChain);
+      setAddress(() => fAddress);
+      if (fChain && fAddress) {
         parseWallet({
           url: `/wallets/parse`,
           params: {
-            chain,
-            address
+            chain: fChain,
+            address: fAddress
           }
         });
       }
@@ -243,8 +247,6 @@ export default function ParserForm() {
     </FormStyle>
   );
 
-  const { address, chain } = formik.values;
-
   if (sAddress === address && sChain.toLocaleLowerCase() === chain.toLocaleLowerCase()) {
     if (sStatus === ParsingStatus.Parsing) return <Loading />;
     if (sStatus === ParsingStatus.Done) return successForm(sMsg);
@@ -261,8 +263,6 @@ export default function ParserForm() {
   if (parsingStatus === ParsingStatus.Fail) {
     return failForm;
   }
-
-  console.log(sStatus, parsingStatus);
   // if (parsingStatus === ParsingStatus.Parsing) {
   //   return successForm;
   // }
