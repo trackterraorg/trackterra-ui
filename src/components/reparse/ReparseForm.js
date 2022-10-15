@@ -94,10 +94,6 @@ export default function ParserForm() {
     const { data } = response.data;
     const { status, msg } = data;
 
-    if (status === ParsingStatus.Done) {
-      return successForm(msg);
-    }
-
     if (status === ParsingStatus.Parsing) {
       return <Loading />;
     }
