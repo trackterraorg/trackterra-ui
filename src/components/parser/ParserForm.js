@@ -26,6 +26,7 @@ import Loading from '../Loading';
 import ParsingStatus from '../../common/parsing-status.enum';
 import chains from '../../data/chains';
 import ErrorMessage from '../ErrorMessage';
+import SuccessMessage from '../SuccessMessage';
 // ----------------------------------------------------------------------
 const FormStyle = styled('div')(({ theme }) => ({
   maxWidth: 480,
@@ -38,28 +39,27 @@ const FormStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function ParserForm() {
-  const ParserSchema = Yup.object().shape({
-    chain: Yup.string()
-      .required('Chain is required!')
-      .test(
-        'is-chain-provided',
-        'Please select a valid chain',
-        (value) => !_.isEmpty(_.find(chains), { value })
-      ),
-    address: Yup.string()
-      .required('Account address is required!')
-      .test('is-terra-account', 'Please enter a valid terra account', (value) =>
-        AccAddress.validate(value)
-      )
-  });
+const ParserSchema = Yup.object().shape({
+  chain: Yup.string()
+    .required('Chain is required!')
+    .test(
+      'is-chain-provided',
+      'Please select a valid chain',
+      (value) => !_.isEmpty(_.find(chains), { value })
+    ),
+  address: Yup.string()
+    .required('Account address is required!')
+    .test('is-terra-account', 'Please enter a valid terra account', (value) =>
+      AccAddress.validate(value)
+    )
+});
 
+export default function ParserForm() {
   const {
     address: sAddress,
     chain: sChain,
     msg: sMsg,
-    status: sStatus,
-    numberOfNewParsedTxs: sNumberOfNewParsedTxs
+    status: sStatus
   } = useContext(SocketContext);
 
   const [chain, setChain] = useState('');
@@ -99,8 +99,15 @@ export default function ParserForm() {
       return;
     }
 
-    formik.handleSubmit();
-    if (formik.isValid) {
+    formik.setTouched({
+      address: true,
+      chain: true
+    });
+
+    formik.validateForm().then((result) => {
+      if (!_.isEmpty(result)) {
+        return;
+      }
       const { address: fAddress, chain: fChain } = formik.values;
       setParsingStatus(() => ParsingStatus.Parsing);
       setChain(() => fChain);
@@ -114,7 +121,7 @@ export default function ParserForm() {
           }
         });
       }
-    }
+    });
   };
 
   const onUseWallet = (chain, address) => {
@@ -198,16 +205,15 @@ export default function ParserForm() {
 
   const successForm = (msg) => (
     <FormStyle>
-      <Box sx={{ mb: 5 }}>
-        <Typography variant="h4" gutterBottom>
-          Success
-        </Typography>
-        <Typography sx={{ color: 'text.secondary' }}>{msg}</Typography>
-        <Typography sx={{ color: 'text.secondary' }}>
-          {`${sNumberOfNewParsedTxs} new transactions parsed`}{' '}
-        </Typography>
-      </Box>
-      <Button fullWidth size="large" type="submit" variant="contained" onClick={goToDashBoard}>
+      <SuccessMessage msg={msg} />
+      <Button
+        fullWidth
+        size="large"
+        type="submit"
+        variant="contained"
+        onClick={goToDashBoard}
+        sx={{ mx: 2 }}
+      >
         Go to dashboard
       </Button>
       <Button
@@ -215,7 +221,7 @@ export default function ParserForm() {
         fullWidth
         size="large"
         variant="contained"
-        sx={{ mt: 5 }}
+        sx={{ mx: 2, mt: 5 }}
         onClick={() => {
           parseNewAccount();
         }}
@@ -247,9 +253,11 @@ export default function ParserForm() {
     </FormStyle>
   );
 
-  if (sAddress === address && sChain.toLocaleLowerCase() === chain.toLocaleLowerCase()) {
-    if (sStatus === ParsingStatus.Parsing) return <Loading />;
-    if (sStatus === ParsingStatus.Done) return successForm(sMsg);
+  if (parsingStatus !== ParsingStatus.Idle) {
+    if (sAddress === address && sChain.toLocaleLowerCase() === chain.toLocaleLowerCase()) {
+      if (sStatus === ParsingStatus.Parsing) return <Loading />;
+      if (sStatus === ParsingStatus.Done) return successForm(sMsg);
+    }
   }
 
   if (loading) return loadingForm;
