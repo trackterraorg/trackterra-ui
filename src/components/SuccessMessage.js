@@ -34,7 +34,12 @@ export default function SuccessMessage(props) {
           <hr />
         </Container>
       )}
-      {msg && <Typography sx={{ mt: 0, mb: 5, color: palette.success.dark }}>{msg}</Typography>}
+      {msg && (
+        <Typography
+          sx={{ mt: 0, mb: 5, color: palette.success.dark }}
+          dangerouslySetInnerHTML={{ __html: msg }}
+        />
+      )}
     </RootStyle>
   );
 }
