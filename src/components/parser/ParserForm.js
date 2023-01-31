@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { AccAddress } from '@terra-money/terra.js';
 
@@ -19,7 +19,6 @@ import {
 import { styled } from '@mui/material/styles';
 import useAxios from 'axios-hooks';
 import _ from 'lodash';
-import SocketContext from '../../socket_context/context';
 import { ConnectWalletButton } from '../wallet';
 import { apiOptions } from '../../utils/apiSettings';
 import Loading from '../Loading';
@@ -55,16 +54,6 @@ const ParserSchema = Yup.object().shape({
 });
 
 export default function ParserForm() {
-  const {
-    address: sAddress,
-    chain: sChain,
-    msg: sMsg,
-    status: sStatus
-  } = useContext(SocketContext);
-
-  const [chain, setChain] = useState('');
-  const [address, setAddress] = useState('');
-
   const [{ response, loading, error }, parseWallet] = useAxios(
     apiOptions({
       method: 'PUT',
@@ -110,8 +99,7 @@ export default function ParserForm() {
       }
       const { address: fAddress, chain: fChain } = formik.values;
       setParsingStatus(() => ParsingStatus.Parsing);
-      setChain(() => fChain);
-      setAddress(() => fAddress);
+      setParsingMsg(() => '');
       if (fChain && fAddress) {
         parseWallet({
           url: `/wallets/parse`,
@@ -203,9 +191,9 @@ export default function ParserForm() {
     </FormStyle>
   );
 
-  const successForm = (msg) => (
+  const successForm = (
     <FormStyle>
-      <SuccessMessage msg={msg} />
+      <SuccessMessage msg={parsingMsg} />
       <Button
         fullWidth
         size="large"
@@ -253,13 +241,6 @@ export default function ParserForm() {
     </FormStyle>
   );
 
-  if (parsingStatus !== ParsingStatus.Idle) {
-    if (sAddress === address && sChain.toLocaleLowerCase() === chain.toLocaleLowerCase()) {
-      if (sStatus === ParsingStatus.Parsing) return <Loading />;
-      if (sStatus === ParsingStatus.Done) return successForm(sMsg);
-    }
-  }
-
   if (loading) return loadingForm;
 
   if (error) return <ErrorMessage msg={`Submission error! ${error.message}`} />;
@@ -271,9 +252,10 @@ export default function ParserForm() {
   if (parsingStatus === ParsingStatus.Fail) {
     return failForm;
   }
-  // if (parsingStatus === ParsingStatus.Parsing) {
-  //   return successForm;
-  // }
+
+  if (parsingStatus === ParsingStatus.Done) {
+    return successForm;
+  }
 
   return loadingForm;
 }

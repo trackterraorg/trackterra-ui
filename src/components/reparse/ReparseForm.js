@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 // material
 import {
   Box,
@@ -14,7 +14,6 @@ import { styled } from '@mui/material/styles';
 import useAxios from 'axios-hooks';
 import { useParams } from 'react-router-dom';
 import _ from 'lodash';
-import SocketContext from '../../socket_context/context';
 import { apiOptions } from '../../utils/apiSettings';
 import Loading from '../Loading';
 import ParsingStatus from '../../common/parsing-status.enum';
@@ -34,14 +33,6 @@ const FormStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function ParserForm() {
-  const {
-    address: sAddress,
-    chain: sChain,
-    msg: sMsg,
-    status: sStatus,
-    numberOfNewParsedTxs: sNumberOfNewParsedTxs
-  } = useContext(SocketContext);
-
   const { chain, address } = useParams();
   const [open, setOpen] = useState(false);
 
@@ -102,13 +93,12 @@ export default function ParserForm() {
       return <Loading />;
     }
 
+    if (status === ParsingStatus.Done) {
+      return successForm(msg);
+    }
+
     return <ErrorMessage msg={msg} />;
   };
-
-  if (sAddress === address && sChain.toLocaleLowerCase() === chain.toLocaleLowerCase()) {
-    if (sStatus === ParsingStatus.Parsing) return <Loading />;
-    if (sStatus === ParsingStatus.Done) return successForm(sMsg);
-  }
 
   if (loading) return <Loading />;
   if (error) return <ErrorMessage msg={error.message} />;
