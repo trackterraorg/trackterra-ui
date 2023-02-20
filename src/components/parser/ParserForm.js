@@ -246,7 +246,7 @@ export default function ParserForm() {
 
   if (error) {
     // cloud flare error
-    if (error.code === '524') {
+    if (error.response.status === 524) {
       return <InfoMessage msg="Might take longer than expected. Please come back in 5 minutes!" />;
     }
 
