@@ -58,7 +58,7 @@ export default function ParserForm() {
   const [{ response, loading, error }, parseWallet] = useAxios(
     apiOptions({
       method: 'PUT',
-      timeout: 600000
+      timeout: 3600000
     }),
     { manual: true }
   );
