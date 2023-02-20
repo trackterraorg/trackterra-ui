@@ -26,6 +26,7 @@ import ParsingStatus from '../../common/parsing-status.enum';
 import chains from '../../data/chains';
 import ErrorMessage from '../ErrorMessage';
 import SuccessMessage from '../SuccessMessage';
+import InfoMessage from '../InfoMessage';
 // ----------------------------------------------------------------------
 const FormStyle = styled('div')(({ theme }) => ({
   maxWidth: 480,
@@ -243,7 +244,14 @@ export default function ParserForm() {
 
   if (loading) return loadingForm;
 
-  if (error) return <ErrorMessage msg={`Submission error! ${error.message}`} />;
+  if (error) {
+    // cloud flare error
+    if (error.code === '524') {
+      return <InfoMessage msg="Might take longer than expected. Please come back in 5 minutes!" />;
+    }
+
+    return <ErrorMessage msg={`Submission error! ${error.message}`} />;
+  }
 
   if (parsingStatus === ParsingStatus.Idle) {
     return parsingForm;
