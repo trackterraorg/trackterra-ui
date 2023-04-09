@@ -9,7 +9,7 @@ import {
   Stack
 } from '@mui/material';
 import { useWallet, WalletStatus } from '@terra-money/wallet-provider';
-import _ from 'lodash';
+import _, { isEmpty } from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import CHAINS from '../../data/chains';
@@ -49,8 +49,13 @@ export default function ConnectWalletButton({ onUseWallet }) {
   }
 
   const terraStationOnly = availableConnections.find(
-    (availableConnection) => availableConnection.name === 'Terra Station Wallet'
+    (availableConnection) => availableConnection.name === 'Station Wallet'
   );
+
+  if (isEmpty(terraStationOnly)) {
+    console.error('Station wallet is not available');
+    return <></>;
+  }
 
   console.log(
     JSON.stringify(
